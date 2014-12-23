@@ -47,10 +47,10 @@ cs(){
 tr -d " \t"
 }
 brand() {
-sed -e 's/(ns\d|whois.)?fastdomain(.com)?.*/\1FastDomain\2/gI' | 
-sed -e 's/(ns\d.)?hostmonster(.com)?.*/\1HostMonster\2/gI' | 
-sed -e 's/(ns\d.)?bluehost(.com)?.*/\1Bluehost\2/gI' | 
-sed -e 's/(ns\d.)?justhost(.com)?.*/\1JustHost\2/gI' |  
+sed -e 's/(ns\d|whois.)?fastdomain\(.com\)\?.*/\1FastDomain\2/gI' | 
+sed -e 's/(ns\d.)?hostmonster\(.com\)\?.*/\1HostMonster\2/gI' | 
+sed -e 's/(ns\d.)?bluehost\(.com\)\?.*/\1Bluehost\2/gI' | 
+sed -e 's/(ns\d.)?justhost\(.com\)\?.*/\1JustHost\2/gI' |  
 awk -v B=`tput cub 99;tput cuf 25` -v A=`tput cub 99;tput cuf 20` 'BEGIN { FS=":" } {reg=$2;
 if ( reg ~ /FastDomain/ ) brand="\033[92m\xE2\x9C\x93\033[0m    \033[38;5;220;1m"$2"\033[0m";
 else if ( reg ~ /Bluehost/ ) brand="\033[92m\xE2\x9C\x93\033[0m    \033[38;5;33;1m"$2"\033[0m";
