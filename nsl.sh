@@ -28,10 +28,6 @@ cat << EOF
     -i       Get host information of resolved ip
     -c       Get cURL data
     -b       Highlight brand
-    -d       Highlight expiration status*
-    -l       Highlight domain status*
- 
-    *not yet implemented 
  
 EOF
 }
@@ -47,10 +43,10 @@ cs(){
 tr -d " \t"
 }
 brand() {
-sed -e 's/\(ns\d|whois.\)\?fastdomain\(.com\)\?.*/\1FastDomain\2/gI' | 
-sed -e 's/\(ns\d.\)\?hostmonster\(.com\)\?.*/\1HostMonster\2/gI' | 
-sed -e 's/\(ns\d.\)\?bluehost\(.com\)\?.*/\1Bluehost\2/gI' | 
-sed -e 's/\(ns\d.\)\?justhost\(.com\)\?.*/\1JustHost\2/gI' |  
+sed -e 's/(ns\d|whois.)?fastdomain\(.com\)\?.*/\1FastDomain\2/gI' | 
+sed -e 's/(ns\d.)?hostmonster\(.com\)\?.*/\1HostMonster\2/gI' | 
+sed -e 's/(ns\d.)?bluehost\(.com\)\?.*/\1Bluehost\2/gI' | 
+sed -e 's/(ns\d.)?justhost\(.com\)\?.*/\1JustHost\2/gI' |  
 awk -v B=`tput cub 99;tput cuf 25` -v A=`tput cub 99;tput cuf 20` 'BEGIN { FS=":" } {reg=$2;
 if ( reg ~ /FastDomain/ ) brand="\033[92m\xE2\x9C\x93\033[0m    \033[38;5;220;1m"$2"\033[0m";
 else if ( reg ~ /Bluehost/ ) brand="\033[92m\xE2\x9C\x93\033[0m    \033[38;5;33;1m"$2"\033[0m";
@@ -77,8 +73,9 @@ echo "$who" | egrep -io "Registrant:[[:space:]]*?[a-zA-Z0-9.]+" |cs| out
 echo "$who" | egrep -io "Whois ?Server:[[:space:]]*?[a-zA-Z0-9.]+" |cs| $BRAND
 echo "$who" | egrep -io "Name ?Servers?:[[:space:]]*?[a-zA-Z0-9.-]+" |cs| $BRAND
 echo "$who" | egrep -io "Updated ?Date:.+" |cs| out
+date '+%B %d, %Y' -d `echo $who | egrep -o 'Creation Date: [0-9\-]{10}'|sed 's/Creation Date: //'`
 echo "$who" | egrep -io "Creation ?Date:.+" |cs| out
-echo "$who" | egrep -io "Expiration ?Date:.+" |cs| $DATE
+echo "$who" | egrep -io "Expiration ?Date:.+" |cs| out
 echo "$who" | egrep -io "Status:.+" |cs| $LOCK
 echo -e "\n   "$title"\e[97mDIG results for $dom"$ctitle$(if [[ $resolver != "8.8.8.8" ]]; then echo " (from $resolver)"; fi)
 dig any $dom @$resolver +noall +answer | egrep "IN" | egrep -v "(NS|SOA)" | sed -r 's/.+(A|CNAME|MX|TXT|SRV|AAAA)\t/\1\t/' | awk -v B=`tput cub 99;tput cuf 26` 'BEGIN { FS="\t" } {print "  "$1":" B $2}' | sort -d
