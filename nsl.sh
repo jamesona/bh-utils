@@ -72,8 +72,8 @@ echo "$who" | egrep -io "Registrar(nsName)?:.+"| head -1 |cs| $BRAND
 echo "$who" | egrep -io "Registrant:[[:space:]]*?[a-zA-Z0-9.]+" |cs| out
 echo "$who" | egrep -io "Whois ?Server:[[:space:]]*?[a-zA-Z0-9.]+" |cs| $BRAND
 echo "$who" | egrep -io "Name ?Servers?:[[:space:]]*?[a-zA-Z0-9.-]+" |cs| $BRAND
-echo "$who" | egrep -io "Updated ?Date:.+" |cs| out
-date '+%B %d, %Y' -d `echo $who | egrep -o 'Creation Date: [0-9\-]{10}'|sed 's/Creation Date: //'`
+#echo "$who" | egrep -io "Updated ?Date:.+" |cs| out
+echo "$(date '+%B %d, %Y' -d `echo $who | egrep -o 'Creation Date: [0-9\-]{10}'|sed 's/Creation Date: //'`)" | CS | out
 echo "$who" | egrep -io "Creation ?Date:.+" |cs| out
 echo "$who" | egrep -io "Expiration ?Date:.+" |cs| out
 echo "$who" | egrep -io "Status:.+" |cs| $LOCK
